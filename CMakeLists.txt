@@ -3,6 +3,9 @@ project(aoc-2025)
 
 set(CMAKE_CXX_STANDARD 23)
 
+# All executables use the include directory
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 # Build executables for days 01-12
 foreach(day RANGE 1 12)
     # Format day number with leading zero (01, 02, ..., 12)
