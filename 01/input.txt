@@ -1,3 +1,0 @@
-This is a test, all words here should be split as for one line
-This is another line, should be separate from the previous line
-Another line 1 2 3 4545 ,12  ewfdc
