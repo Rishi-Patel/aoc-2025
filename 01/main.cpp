@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
     auto end1 = std::chrono::high_resolution_clock::now();
     Part2(part2_input);
     auto end2 = std::chrono::high_resolution_clock::now();
-    std::cout << "Part 1 time: " << std::chrono::duration_cast<std::chrono::microseconds>(end1 - start).count() << "ms" << std::endl;
-    std::cout << "Part 2 time: " << std::chrono::duration_cast<std::chrono::microseconds>(end2 - start).count() << "ms" << std::endl;
+    std::cout << "Part 1 time: " << std::chrono::duration_cast<std::chrono::microseconds>(end1 - start).count() << "µs" << std::endl;
+    std::cout << "Part 2 time: " << std::chrono::duration_cast<std::chrono::microseconds>(end2 - start).count() << "µs" << std::endl;
     return 0;
 }
