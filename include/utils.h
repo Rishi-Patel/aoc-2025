@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 std::vector<std::string> Split(const std::string& s,
                                const std::string& delimiter) {
@@ -25,4 +26,11 @@ std::vector<std::string> Split(const std::string& s,
     result.emplace_back(substr);
   }
   return result;
+}
+
+// Duplicate cin to two istreams for part 1 and 2
+std::pair<std::istringstream, std::istringstream> ReadInput() {
+  std::string input((std::istreambuf_iterator<char>(std::cin)),
+                   std::istreambuf_iterator<char>());
+  return std::make_pair<std::istringstream, std::istringstream>(std::istringstream(input), std::istringstream(input));
 }
