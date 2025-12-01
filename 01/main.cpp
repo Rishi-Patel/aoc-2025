@@ -5,7 +5,7 @@
 #include <sstream>
 #include "utils.h" 
 
-void Part1(std::istringstream& input) {
+unsigned long long Part1(std::istringstream& input) {
     std::string line;
     int num = 50;
     int ans = 0;
@@ -24,10 +24,10 @@ void Part1(std::istringstream& input) {
             ans++;
         }
     }
-    std::cout << ans << std::endl;
+    return ans;
 }
 
-void Part2(std::istringstream& input) {
+unsigned long long Part2(std::istringstream& input) {
     std::string line;
     int num = 50;
     int ans = 0;
@@ -56,17 +56,19 @@ void Part2(std::istringstream& input) {
             num += 100;
         }
     }
-    std::cout << ans << std::endl;
+    return ans;
 }
 
 int main(int argc, char* argv[]) {
     auto [part1_input, part2_input] = ReadInput();
+    
     auto start = std::chrono::high_resolution_clock::now();
-    Part1(part1_input);
+    unsigned long long part1_answer = Part1(part1_input);
     auto end1 = std::chrono::high_resolution_clock::now();
-    Part2(part2_input);
+    std::cout << "Part 1\tAnswer: " << part1_answer << "\tTime: " << std::chrono::duration_cast<std::chrono::microseconds>(end1 - start).count() << " µs" << std::endl;
+
+    unsigned long long part2_answer = Part2(part2_input);
     auto end2 = std::chrono::high_resolution_clock::now();
-    std::cout << "Part 1 time: " << std::chrono::duration_cast<std::chrono::microseconds>(end1 - start).count() << "µs" << std::endl;
-    std::cout << "Part 2 time: " << std::chrono::duration_cast<std::chrono::microseconds>(end2 - start).count() << "µs" << std::endl;
+    std::cout << "Part 2\tAnswer: " << part2_answer << "\tTime: " << std::chrono::duration_cast<std::chrono::microseconds>(end2 - end1).count() << " µs" << std::endl;
     return 0;
 }
