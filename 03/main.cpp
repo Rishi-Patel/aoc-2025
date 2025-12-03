@@ -5,55 +5,45 @@
 #include <vector>
 #include "utils.h"
 
+// Start by choosing the most significant digit/battery. 
+// We want to pick the largest number/battery possible while leaving enough batteries to the chosen battery's right
+// so that we can pick the next numBatteries-1 batteries. We repeat this process for every battery, starting at the 
+// battery immediately to the right of the last chosen battery
+unsigned long long CalculateMaxJoltage(const std::string& bank, size_t numBatteries) {
+    std::string joltage = "";
+    int startIndex = 0;
+    for (int numBatteriesPicked = 0; numBatteriesPicked < numBatteries; numBatteriesPicked++) {
+        int largestNum = -1;
+        int index = -1;
+        for (int i = startIndex; i < bank.length()-numBatteries + 1 + numBatteriesPicked; i++) {
+            int num = (bank[i] - '0');
+            if (num > largestNum) {
+                largestNum = num;
+                index = i;
+            }
+        }
+        startIndex = index + 1;
+        joltage += std::to_string(largestNum);
+    }
+    return std::stoull(joltage);
+}
+
 unsigned long long Part1(std::istringstream& input) {
     unsigned long long ans = 0;
 
     std::string line;
     while (std::getline(input, line)) {
-        int largestNum = -1;
-        size_t largestNumIndex = 0;
-        for (int i = 0; i < line.length()-1; i++) {
-            int num = (line[i] - '0');
-            if (num > largestNum) {
-                largestNum = num;
-                largestNumIndex = i;
-            }
-        }
-        int secondLargestNum = -1;
-        for (int i = largestNumIndex+1; i < line.length(); i++) {
-            int num = (line[i] - '0');
-            if (num > secondLargestNum) {
-                secondLargestNum = num;
-            }
-        }
-        ans += largestNum * 10 + secondLargestNum;
+            ans += CalculateMaxJoltage(line, 2);
     }
 
     return ans;
 }
 
 unsigned long long Part2(std::istringstream& input) {
-    const int NUM_BATTERIES = 12;
     std::string line;
     unsigned long long ans = 0;
     while (std::getline(input, line)) {
-        std::string joltage = "";
-        int startIndex = 0;
-        for (int numBattersPicked = 0; numBattersPicked < NUM_BATTERIES; numBattersPicked++) {
-            int largestNum = -1;
-            int index = -1;
-            for (int i = startIndex; i < line.length()-NUM_BATTERIES + 1 + numBattersPicked; i++) {
-                int num = (line[i] - '0');
-                if (num > largestNum) {
-                    largestNum = num;
-                    index = i;
-                }
-            }
-            startIndex = index + 1;
-            joltage += std::to_string(largestNum);
-        }
-
-        ans += std::stoull(joltage);
+        ans += CalculateMaxJoltage(line, 12);
     }
 
     return ans;
