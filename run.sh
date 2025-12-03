@@ -2,12 +2,24 @@
 
 # Check if day argument is provided
 if [ $# -eq 0 ]; then
-    echo "Usage: ./run.sh <day>"
+    echo "Usage: ./run.sh <day> [build_type]"
     echo "Example: ./run.sh day01"
+    echo "Example: ./run.sh day01 release"
+    echo "Example: ./run.sh day01 debug"
     exit 1
 fi
 
 DAY=$1
+BUILD_TYPE=${2:-Debug}  # Default to Debug if not provided
+
+# Normalize build_type to have capital first letter (Debug or Release)
+BUILD_TYPE=$(echo "$BUILD_TYPE" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
+
+# Validate build_type
+if [ "$BUILD_TYPE" != "Debug" ] && [ "$BUILD_TYPE" != "Release" ]; then
+    echo "Error: build_type must be either 'debug' or 'release'"
+    exit 1
+fi
 
 # Validate day format (day01-day12)
 if [[ ! $DAY =~ ^day(0[1-9]|1[0-2])$ ]]; then
@@ -25,15 +37,30 @@ mkdir -p "$BUILD_DIR"
 # Change to build directory
 cd "$BUILD_DIR" || exit 1
 
-# Run cmake if CMakeCache.txt doesn't exist
+# Check if we need to reconfigure cmake
+NEEDS_RECONFIGURE=false
 if [ ! -f "CMakeCache.txt" ]; then
-    echo "Configuring CMake..."
-    cmake "$SCRIPT_DIR" || exit 1
+    NEEDS_RECONFIGURE=true
+    echo "Configuring CMake for the first time..."
+else
+    # Check current build type in CMakeCache.txt
+    CURRENT_BUILD_TYPE=$(grep "^CMAKE_BUILD_TYPE:" CMakeCache.txt 2>/dev/null | cut -d'=' -f2 | tr -d '\n')
+    if [ "$CURRENT_BUILD_TYPE" != "$BUILD_TYPE" ]; then
+        NEEDS_RECONFIGURE=true
+        echo "Build type changed from $CURRENT_BUILD_TYPE to $BUILD_TYPE, reconfiguring CMake..."
+    fi
 fi
 
 # Check if rebuild is needed
 EXECUTABLE="$BUILD_DIR/$DAY/$DAY"
 NEEDS_REBUILD=false
+
+# Reconfigure cmake if needed
+if [ "$NEEDS_RECONFIGURE" = true ]; then
+    cmake "$SCRIPT_DIR" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" || exit 1
+    # Force rebuild after reconfiguration
+    NEEDS_REBUILD=true
+fi
 
 # Check if executable exists
 if [ ! -f "$EXECUTABLE" ]; then

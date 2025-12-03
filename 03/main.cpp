@@ -53,8 +53,6 @@ unsigned long long Part2(std::istringstream& input) {
             joltage += std::to_string(largestNum);
         }
 
-        std::cout << joltage << std::endl;\
-
         ans += std::stoull(joltage);
     }
 
