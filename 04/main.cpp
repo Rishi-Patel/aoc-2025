@@ -56,7 +56,7 @@ unsigned long long Part2(std::istringstream& input) {
             map.back().push_back(c == '@');
         }
     }
-
+    // lazy wrap part 1 code in a while loop. We're done when our ans doesnt change anymore.
     while (true) {
         auto oldAns = ans;
         for (int i = 0; i < map.size(); i++) {
