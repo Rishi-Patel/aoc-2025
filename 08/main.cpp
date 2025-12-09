@@ -103,17 +103,14 @@ unsigned long long Part2(std::istringstream& input) {
     while (!distances.empty()) {
         auto [distance, j1, j2] = distances.top();
         distances.pop();
-        // std::cout << "Connecting " << j1 << " and " << j2 << std::endl;
         if (junctionBoxes[j1].circuitId == junctionBoxes[j2].circuitId) {
             continue;
         }
-        // std::cout << "Connecting circuit " << junctionBoxes[j1].circuitId << " and " << junctionBoxes[j2].circuitId << std::endl;
         auto oldCircuitId = junctionBoxes[j2].circuitId;
         for (auto& junction : circuitToJunctions[junctionBoxes[j2].circuitId]) {
             circuitToJunctions[junctionBoxes[j1].circuitId].push_back(junction);
             junctionBoxes[junction].circuitId = junctionBoxes[j1].circuitId;
         }
-        // std::cout << "Erasing circuit " << oldCircuitId << std::endl;
         circuitToJunctions.erase(oldCircuitId);
 
         if (circuitToJunctions.size() == 1) {
